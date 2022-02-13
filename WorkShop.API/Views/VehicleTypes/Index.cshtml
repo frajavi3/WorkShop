@@ -1,0 +1,35 @@
+﻿@model IEnumerable<WorkShop.API.Data.Entities.VehicleType>
+
+@{
+    ViewData["Title"] = "Típos de vehículos";
+}
+
+<h1>Típos de vehículos</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-outline-primary">Crear nuevo</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-info">Editar</a> |
+                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-warning">Detalles</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-outline-danger">Eliminar</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
