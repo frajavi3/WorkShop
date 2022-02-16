@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using WorkShop.Common.Enum;
 
@@ -33,6 +34,7 @@ namespace WorkShop.API.Data.Entities
         [Display(Name = "Foto")]
         public Guid ImageId { get; set; }
 
+        //TODO: Corregir el enlace
         [Display(Name = "Foto")]
         public string ImageFullPath => ImageId == Guid.Empty
             ? $"https://localhost:44330/images/noimage.png"
@@ -43,5 +45,9 @@ namespace WorkShop.API.Data.Entities
 
         [Display(Name = "Nombre completo")]
         public string FullName => $"{FirstName} {LastName}";
+
+        public ICollection<Vehicle> Vehicles { get; set; }
+
+        public ICollection<History> Histories { get; set; }
     }
 }

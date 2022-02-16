@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace WorkShop.API.Data.Entities
 {
@@ -10,5 +11,7 @@ namespace WorkShop.API.Data.Entities
         [MaxLength(50, ErrorMessage = "El campo {0} no debe ser mayor a {1} carácteres.")]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public string Description { get; set; }
+
+        public ICollection<Vehicle> Vehicles { get; set; }
     }
 }

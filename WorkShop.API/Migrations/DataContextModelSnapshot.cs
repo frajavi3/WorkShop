@@ -170,6 +170,37 @@ namespace WorkShop.API.Migrations
                     b.ToTable("Brands");
                 });
 
+            modelBuilder.Entity("WorkShop.API.Data.Entities.Detail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("HistoryId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("LaborPrice")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProcedureId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Remarks")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SparePartsPrice")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("HistoryId");
+
+                    b.HasIndex("ProcedureId");
+
+                    b.ToTable("Details");
+                });
+
             modelBuilder.Entity("WorkShop.API.Data.Entities.DocumentType", b =>
                 {
                     b.Property<int>("Id")
@@ -188,6 +219,38 @@ namespace WorkShop.API.Migrations
                         .IsUnique();
 
                     b.ToTable("DocumentTypes");
+                });
+
+            modelBuilder.Entity("WorkShop.API.Data.Entities.History", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Mileage")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Remarks")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int?>("VehicleId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("VehicleId");
+
+                    b.ToTable("Histories");
                 });
 
             modelBuilder.Entity("WorkShop.API.Data.Entities.Procedure", b =>
@@ -308,6 +371,78 @@ namespace WorkShop.API.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("WorkShop.API.Data.Entities.Vehicle", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("BrandId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Color")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Line")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("Model")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Plaque")
+                        .IsRequired()
+                        .HasMaxLength(6)
+                        .HasColumnType("nvarchar(6)");
+
+                    b.Property<string>("Remarks")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("VehicleTypeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BrandId");
+
+                    b.HasIndex("Plaque")
+                        .IsUnique();
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("VehicleTypeId");
+
+                    b.ToTable("Vehicles");
+                });
+
+            modelBuilder.Entity("WorkShop.API.Data.Entities.VehiclePhoto", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<Guid>("ImageId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("VehicleId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("VehicleId");
+
+                    b.ToTable("VehiclePhotos");
+                });
+
             modelBuilder.Entity("WorkShop.API.Data.Entities.VehicleType", b =>
                 {
                     b.Property<int>("Id")
@@ -379,6 +514,42 @@ namespace WorkShop.API.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("WorkShop.API.Data.Entities.Detail", b =>
+                {
+                    b.HasOne("WorkShop.API.Data.Entities.History", "History")
+                        .WithMany("Details")
+                        .HasForeignKey("HistoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WorkShop.API.Data.Entities.Procedure", "Procedure")
+                        .WithMany("Details")
+                        .HasForeignKey("ProcedureId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("History");
+
+                    b.Navigation("Procedure");
+                });
+
+            modelBuilder.Entity("WorkShop.API.Data.Entities.History", b =>
+                {
+                    b.HasOne("WorkShop.API.Data.Entities.User", "User")
+                        .WithMany("Histories")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WorkShop.API.Data.Entities.Vehicle", "Vehicle")
+                        .WithMany("Histories")
+                        .HasForeignKey("VehicleId");
+
+                    b.Navigation("User");
+
+                    b.Navigation("Vehicle");
+                });
+
             modelBuilder.Entity("WorkShop.API.Data.Entities.User", b =>
                 {
                     b.HasOne("WorkShop.API.Data.Entities.DocumentType", "DocumentType")
@@ -390,9 +561,81 @@ namespace WorkShop.API.Migrations
                     b.Navigation("DocumentType");
                 });
 
+            modelBuilder.Entity("WorkShop.API.Data.Entities.Vehicle", b =>
+                {
+                    b.HasOne("WorkShop.API.Data.Entities.Brand", "Brand")
+                        .WithMany("Vehicles")
+                        .HasForeignKey("BrandId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WorkShop.API.Data.Entities.User", "User")
+                        .WithMany("Vehicles")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WorkShop.API.Data.Entities.VehicleType", "VehicleType")
+                        .WithMany("Vehicles")
+                        .HasForeignKey("VehicleTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Brand");
+
+                    b.Navigation("User");
+
+                    b.Navigation("VehicleType");
+                });
+
+            modelBuilder.Entity("WorkShop.API.Data.Entities.VehiclePhoto", b =>
+                {
+                    b.HasOne("WorkShop.API.Data.Entities.Vehicle", "Vehicle")
+                        .WithMany("VehiclePhotos")
+                        .HasForeignKey("VehicleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Vehicle");
+                });
+
+            modelBuilder.Entity("WorkShop.API.Data.Entities.Brand", b =>
+                {
+                    b.Navigation("Vehicles");
+                });
+
             modelBuilder.Entity("WorkShop.API.Data.Entities.DocumentType", b =>
                 {
                     b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("WorkShop.API.Data.Entities.History", b =>
+                {
+                    b.Navigation("Details");
+                });
+
+            modelBuilder.Entity("WorkShop.API.Data.Entities.Procedure", b =>
+                {
+                    b.Navigation("Details");
+                });
+
+            modelBuilder.Entity("WorkShop.API.Data.Entities.User", b =>
+                {
+                    b.Navigation("Histories");
+
+                    b.Navigation("Vehicles");
+                });
+
+            modelBuilder.Entity("WorkShop.API.Data.Entities.Vehicle", b =>
+                {
+                    b.Navigation("Histories");
+
+                    b.Navigation("VehiclePhotos");
+                });
+
+            modelBuilder.Entity("WorkShop.API.Data.Entities.VehicleType", b =>
+                {
+                    b.Navigation("Vehicles");
                 });
 #pragma warning restore 612, 618
         }
