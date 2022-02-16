@@ -1,15 +1,21 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using WorkShop.API.Data.Entities;
+using WorkShop.API.Helpers;
+using WorkShop.Common.Enum;
 
 namespace WorkShop.API.Data
 {
     public class SeedDb
     {
         private readonly DataContext _context;
-        public SeedDb(DataContext context)
+        private readonly IUserHelper _userHelper;
+
+        public SeedDb(DataContext context, IUserHelper userHelper)
         {
             _context = context;
+            _userHelper = userHelper;
         }
 
         public async Task SeedAsync()
@@ -19,6 +25,38 @@ namespace WorkShop.API.Data
             await CheckDocumentTypesAsync();
             await CheckProceduresAsync();
             await CheckVehicleTypesAsync();
+            await CheckRolesAsync();
+            await CheckUsersAsync("1010", "Javier", "Ibarra", "frajavi3@gmail.com", "6621315336", "Acacia Blanca 192", UserType.Admin);
+            await CheckUsersAsync("2020", "Francisco", "Ayala", "frajavi3@hotmail.com", "6621315336", "Acacia Blanca 192", UserType.User);
+        }
+
+        private async Task CheckUsersAsync(string document, string firstName, string lastName, string email, string phoneNumber, string address, UserType userType)
+        {
+            User user = await _userHelper.GetUserAsync(email);
+            if (user == null)
+            {
+                user = new User
+                {
+                    Address = address,
+                    Document = document,
+                    DocumentType = _context.DocumentTypes.FirstOrDefault(),
+                    Email = email,
+                    FirstName = firstName,
+                    LastName = lastName,
+                    PhoneNumber = phoneNumber,
+                    UserName = email,
+                    UserType = userType
+                };
+
+                await _userHelper.AddUserAsync(user, "123456");
+                await _userHelper.AddUserToRoleAsync(user, userType.ToString());
+            }
+        }
+
+        private async Task CheckRolesAsync()
+        {
+            await _userHelper.CheckRoleAsync(UserType.Admin.ToString());
+            await _userHelper.CheckRoleAsync(UserType.User.ToString());
         }
 
         private async Task CheckBrandsAsync()
