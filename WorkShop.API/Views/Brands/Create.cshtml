@@ -1,4 +1,4 @@
-﻿@model WorkShop.API.Data.Entities.VehicleType
+﻿@model WorkShop.API.Data.Entities.Brand
 
 @{
     ViewData["Title"] = "Crear nuevo";
@@ -6,7 +6,7 @@
 
 <h1>Crear nuevo</h1>
 
-<h4>Típo de vehículo</h4>
+<h4>Marca</h4>
 <hr />
 <div class="row">
     <div class="col-md-12">
@@ -24,6 +24,7 @@
         </form>
     </div>
 </div>
+
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

@@ -20,10 +20,13 @@ namespace WorkShop.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+
             services.AddDbContext<DataContext>(x =>
             {
                 x.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
+
+            services.AddTransient<SeedDb>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

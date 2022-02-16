@@ -1,4 +1,4 @@
-﻿@model WorkShop.API.Data.Entities.VehicleType
+﻿@model WorkShop.API.Data.Entities.Procedure
 
 @{
     ViewData["Title"] = "Crear nuevo";
@@ -6,7 +6,7 @@
 
 <h1>Crear nuevo</h1>
 
-<h4>Típo de vehículo</h4>
+<h4>Procedimiento</h4>
 <hr />
 <div class="row">
     <div class="col-md-12">
@@ -16,6 +16,11 @@
                 <label asp-for="Description" class="control-label"></label>
                 <input asp-for="Description" class="form-control" />
                 <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Price" class="control-label"></label>
+                <input asp-for="Price" class="form-control" />
+                <span asp-validation-for="Price" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Crear" class="btn btn-outline-success" />
