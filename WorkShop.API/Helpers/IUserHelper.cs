@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
 using WorkShop.API.Data.Entities;
+using WorkShop.API.Models;
 
 namespace WorkShop.API.Helpers
 {
@@ -15,5 +16,9 @@ namespace WorkShop.API.Helpers
         Task AddUserToRoleAsync(User user, string roleName);
 
         Task<bool> IsUserInRoleAsync(User user, string roleName);
+
+        Task<SignInResult> LoginAsync(LoginViewModel model);
+
+        Task LogoutAsync();
     }
 }

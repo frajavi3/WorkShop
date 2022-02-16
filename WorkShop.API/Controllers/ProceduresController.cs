@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Threading.Tasks;
 using WorkShop.API.Data;
 using WorkShop.API.Data.Entities;
 
 namespace WorkShop.API.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class ProceduresController : Controller
     {
         private readonly DataContext _context;
@@ -68,7 +67,7 @@ namespace WorkShop.API.Controllers
                 return NotFound();
             }
 
-            var procedure = await _context.Procedures.FindAsync(id);
+            Procedure procedure = await _context.Procedures.FindAsync(id);
             if (procedure == null)
             {
                 return NotFound();
@@ -120,7 +119,7 @@ namespace WorkShop.API.Controllers
                 return NotFound();
             }
 
-            var procedure = await _context.Procedures
+            Procedure procedure = await _context.Procedures
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (procedure == null)
